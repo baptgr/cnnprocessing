@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import time
 import numpy as np
+import os
 from PIL import Image as pil_image
 from keras.preprocessing.image import save_img
 from keras import backend as K
@@ -146,7 +147,7 @@ def _generate_filter_image(input_img,
     return img, loss_value
 
 
-def _draw_filters(img_loss, output_dim, layer_name, filter_index):
+def _draw_filters(img_loss, output_dim, layer_name, filter_index, path_output_folder):
     """Draw the best filters in a nxn grid.
 
     # Arguments
@@ -174,4 +175,4 @@ def _draw_filters(img_loss, output_dim, layer_name, filter_index):
 
 
     # save the result to disk
-    save_img('vgg_{0:}_{1:}.png'.format(layer_name, img), stitched_filters)
+    save_img(os.path.join(path_output_folder, 'vgg_{0:}_{1:}.png'.format(layer_name, img)), stitched_filters)

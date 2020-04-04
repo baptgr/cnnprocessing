@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import time
 import numpy as np
+import os
 from PIL import Image as pil_image
 from keras.preprocessing.image import save_img
 from keras import layers

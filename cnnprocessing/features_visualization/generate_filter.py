@@ -1,10 +1,14 @@
+import os
+
 from keras import layers
-from cnnprocessing.features_visualization.utils import _draw_filters, _generate_filter_image
+from cnnprocessing.features_visualization.utils import _generate_filter_image
+from keras.preprocessing.image import save_img
 
 
 def visualize_filter(model,
                      layer_name,
                      filter_index,
+                     path_output_folder,
                      step=1.,
                      epochs=15,
                      upscaling_steps=9,
@@ -28,18 +32,16 @@ def visualize_filter(model,
                       If the second value is `None`,
                       the last filter will be inferred as the upper boundary.
     """
-    print('ok')
     # this is the placeholder for the input images
     assert len(model.inputs) == 1
     input_img = model.inputs[0]
 
     # get the symbolic outputs of each "key" layer (we gave them unique names).
-    layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+    layer_dict = dict([(layer.name, layer) for layer in model.layers])
 
     output_layer = layer_dict[layer_name]
     assert isinstance(output_layer, layers.Conv2D)
 
-    print('ok')
     # iterate through each filter and generate its corresponding image
     processed_filter = _generate_filter_image(input_img, output_layer.output, filter_index,
                                               step, epochs, upscaling_steps, upscaling_factor, output_dim)
@@ -48,7 +50,7 @@ def visualize_filter(model,
 
         print('Filter processed')
         # Finally draw and store the best filters to disk
-        _draw_filters(processed_filter, output_dim, layer_name, filter_index)
+        save_img(os.path.join(path_output_folder, 'vgg_{0:}_{1:}.png'.format(layer_name, filter_index)), processed_filter[0].reshape((412, 412, 3)))
 
     else:
 
